@@ -1,3 +1,11 @@
+add_library(inih
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/inih/ini.c
+)
+
+target_include_directories(inih
+	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../External/inih/
+)
+
 # get all files
 file(GLOB
 	PRIVATE_FILES
@@ -51,6 +59,7 @@ target_link_libraries(Game PRIVATE
 	RenderCore
 	Core
 	RenderEngine
+	inih
 )
 
 target_precompile_headers(Game
@@ -69,4 +78,5 @@ target_precompile_headers(Game
 		<cstdint>
 		<limits>
 		<chrono>
+		<filesystem>
 )

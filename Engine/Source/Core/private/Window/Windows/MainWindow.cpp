@@ -88,4 +88,9 @@ namespace GameEngine::Core
 
 		return;
 	}
+
+	bool Window::IsKeyPressed(int key)
+	{
+		return GetAsyncKeyState(key) & 0x8000;
+	}
 }

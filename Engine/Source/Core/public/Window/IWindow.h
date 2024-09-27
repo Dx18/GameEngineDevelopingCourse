@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array.h>
 #include <Core/export.h>
 #include <Vector.h>
 
@@ -21,13 +22,15 @@ namespace GameEngine::Core
 		Math::Vector2i GetMousePos() const { return m_MousePos; }
 		void SetMousePos(int x, int y) { m_MousePos.x = x; m_MousePos.y = y; }
 
+		bool IsKeyPressed(int key);
+
 	private:
 		uint32_t m_Width = 800;
 		uint32_t m_Height = 600;
 
 		void* m_WndHndl = nullptr;
 
-		Math::Vector2i m_MousePos;
+		Math::Vector2i m_MousePos = Math::Vector2i::Zero();
 	};
 
 	extern CORE_API Window* g_MainWindowsApplication;

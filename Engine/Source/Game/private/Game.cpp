@@ -6,9 +6,11 @@
 namespace GameEngine
 {
 	Game::Game(
-		std::function<bool()> PlatformLoopFunc
+		std::function<bool()> PlatformLoopFunc,
+		GameConfig config
 	) :
-		PlatformLoop(PlatformLoopFunc)
+		PlatformLoop(PlatformLoopFunc),
+		Config(std::move(config))
 	{
 		Core::g_MainCamera = new Core::Camera();
 		Core::g_MainCamera->SetPosition(Math::Vector3f(0.0f, 6.0f, -6.0f));
@@ -67,6 +69,47 @@ namespace GameEngine
 				pos.y -= 0.5f * dt;
 			}
 			m_Objects[i]->SetPosition(pos, m_renderThread->GetMainFrame());
+		}
+
+		Math::Vector3f moveDirection = Math::Vector3f::Zero();
+		if (Core::g_MainWindowsApplication->IsKeyPressed('W'))
+		{
+			moveDirection.y += 1.0;
+		}
+		if (Core::g_MainWindowsApplication->IsKeyPressed('A'))
+		{
+			moveDirection.x += 1.0;
+		}
+		if (Core::g_MainWindowsApplication->IsKeyPressed('S'))
+		{
+			moveDirection.y -= 1.0;
+		}
+		if (Core::g_MainWindowsApplication->IsKeyPressed('D'))
+		{
+			moveDirection.x -= 1.0;
+		}
+		if (Core::g_MainWindowsApplication->IsKeyPressed('R'))
+		{
+			moveDirection.z += 1.0;
+		}
+		if (Core::g_MainWindowsApplication->IsKeyPressed('F'))
+		{
+			moveDirection.z -= 1.0;
+		}
+
+		if (moveDirection != Math::Vector3f::Zero())
+		{
+			Math::Vector3f velocity = moveDirection.Normalized() * dt * Config.cameraSpeed;
+
+			Math::Vector3f position = Core::g_MainCamera->GetPosition();
+
+			Math::Vector3f forwardDir = Core::g_MainCamera->GetViewDir();
+			Math::Vector3f rightDir = forwardDir.CrossProduct(Math::Vector3f(0.0, 1.0, 0.0)).Normalized();
+			Math::Vector3f upDir = rightDir.CrossProduct(forwardDir);
+
+			Math::Vector3f offset = rightDir * velocity.x + forwardDir * velocity.y + upDir * velocity.z;
+
+			Core::g_MainCamera->SetPosition(position + offset);
 		}
 	}
 }

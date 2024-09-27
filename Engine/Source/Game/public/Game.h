@@ -9,12 +9,18 @@ namespace GameEngine
 {
 	class GameObject;
 
+	struct GameConfig
+	{
+		float cameraSpeed = 1.0;
+	};
+
 	class Game final
 	{
 	public:
 		Game() = delete;
 		Game(
-			std::function<bool()> PlatformLoopFunc
+			std::function<bool()> PlatformLoopFunc,
+			GameConfig config
 		);
 
 	public:
@@ -24,6 +30,8 @@ namespace GameEngine
 	private:
 		// The main idea behind having this functor is to abstract the common code from the platfrom-specific code
 		std::function<bool()> PlatformLoop = nullptr;
+
+		GameConfig Config;
 
 	private:
 		Core::Timer m_GameTimer;
